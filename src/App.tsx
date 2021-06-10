@@ -1,7 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import SearchComponent from './SearchComponent';
 
+
+interface AppState {
+  query: string; //search input by the user
+  filter: string; //filter chosen by the user
+}
+
+
+class App extends Component<{}, AppState> {
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      query: "",
+      filter: "",
+    };
+  }
+
+  //Update this.state with a new query and filter text.
+  updateQuery = (newQuery: string, newFilter: string) => {
+    this.setState({
+      query: newQuery,
+      filter: newFilter,
+    });
+
+  }
+
+  render() {
+    return (
+        <div>
+          <h1>Hello</h1>
+          <SearchComponent onInputChange={this.updateQuery}/>
+        </div>
+    )
+  }
+
+
+}
+
+/*
 function App() {
   return (
     <div className="App">
@@ -22,5 +61,5 @@ function App() {
     </div>
   );
 }
-
+*/
 export default App;
