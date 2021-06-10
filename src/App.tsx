@@ -15,7 +15,7 @@ class App extends Component<{}, AppState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      query: "",
+      query: "Iron Man",
       filter: "",
     };
   }
