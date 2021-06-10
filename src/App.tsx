@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import SearchComponent from './SearchComponent';
+import ResultComponent from "./ResultComponent";
 
 
 interface AppState {
@@ -33,6 +34,7 @@ class App extends Component<{}, AppState> {
         <div>
           <h1>Hello</h1>
           <SearchComponent onInputChange={this.updateQuery}/>
+          <ResultComponent title={this.state.query} filter={this.state.filter}/>
         </div>
     )
   }
