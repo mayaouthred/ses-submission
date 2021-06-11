@@ -7,12 +7,15 @@ interface SelectionProps {
 
 interface SelectionState {
     movie: any; //an object holding the response from the API
+    poster: HTMLImageElement | null;
 }
 
 /**
  * Displays the movie's associated information.
  */
 class Selection extends Component<SelectionProps, SelectionState> {
+
+    canvas: React.RefObject<HTMLCanvasElement>;
 
     constructor(props: any) {
         super(props);
@@ -22,8 +25,10 @@ class Selection extends Component<SelectionProps, SelectionState> {
                 Runtime: "Default",
                 Genre: "Default",
                 Director: "Default",
-                Plot: "Default"}
+                Plot: "Default"},
+            poster: null
         };
+        this.canvas = React.createRef();
     }
 
     componentDidMount() {
@@ -34,6 +39,9 @@ class Selection extends Component<SelectionProps, SelectionState> {
     componentDidUpdate(prevProps: any, prevState: any) {
         if (this.props.title !== prevProps.title) {
             this.getTitleInformation();
+        }
+        if (this.state.poster !== prevState.poster) {
+            this.draw();
         }
     }
 
@@ -61,12 +69,47 @@ class Selection extends Component<SelectionProps, SelectionState> {
 
             this.setState({
                 movie: result
+            }, () => {
+                this.fetchAndSaveImage();
             });
 
         } catch (e) {
             alert("There was a problem connecting to the server.");
             console.log(e);
         }
+    }
+
+    fetchAndSaveImage() {
+        if (this.state.movie.Poster === "N/A") {
+            this.setState( {
+                poster: null
+            });
+            return;
+        }
+        let poster: HTMLImageElement = new Image();
+        poster.onload = () => {
+            this.setState({
+                poster: poster
+            })
+        }
+        poster.src = this.state.movie.Poster;
+    }
+
+    draw() {
+        console.log("redrew poster");
+        let canvas = this.canvas.current;
+        if (canvas === null) throw Error("No canvas reference.");
+        let ctx = canvas.getContext("2d");
+        if (ctx === null) throw Error("Can't draw, no graphics context.");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (this.state.poster !== null) {
+            canvas.width = this.state.poster.width;
+            canvas.height = this.state.poster.height;
+            ctx.drawImage(this.state.poster, 0, 0);
+        }
+
+
     }
 
     render() {
@@ -78,6 +121,7 @@ class Selection extends Component<SelectionProps, SelectionState> {
                 <p><b>Genre: </b>{this.state.movie.Genre}</p>
                 <p><b>Director: </b>{this.state.movie.Director}</p>
                 <p>{this.state.movie.Plot}</p>
+                <canvas ref={this.canvas}/>
             </div>
         )
     }
