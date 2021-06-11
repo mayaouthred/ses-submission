@@ -8,7 +8,13 @@ interface AppState {
   query: string; //search input by the user
 }
 
-
+/**
+ * A movie database that searches for movies based on the user's query and allows them to
+ * select titles the results to get more information. The query flows from SearchComponent to
+ * App to ResultComponent. The selected title flows from ResultComponent to Selection.
+ *
+ * Defaults to showing information about Iron Man.
+ */
 class App extends Component<{}, AppState> {
 
   constructor(props: any) {
@@ -29,7 +35,7 @@ class App extends Component<{}, AppState> {
   render() {
     return (
         <div>
-          <h1>Hello</h1>
+          <h1 id='heading'>Movie Metadata</h1>
           <SearchComponent onInputChange={this.updateQuery}/>
           <ResultComponent title={this.state.query}/>
         </div>

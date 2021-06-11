@@ -58,7 +58,7 @@ button:hover {
 .search-button {
   font-size: 12px;
   padding: 12px 20px;
-  background-color: cadetblue;
+  background-color: #adcaf7;
   margin: 10px 10px 10px 10px;
 }
 
@@ -95,4 +95,8 @@ button:hover {
 @media screen and (max-width:900px) {
   .inline-display{flex-wrap: wrap;}
   #titles-list {flex-basis: 100%;}
+}
+
+#heading {
+  text-align: center;
 }

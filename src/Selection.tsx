@@ -7,15 +7,15 @@ interface SelectionProps {
 
 interface SelectionState {
     movie: any; //an object holding the response from the API
-    poster: HTMLImageElement | null;
+    poster: HTMLImageElement | null; //the movie's poster
 }
 
 /**
- * Displays the movie's associated information.
+ * Displays details from the selected title.
  */
 class Selection extends Component<SelectionProps, SelectionState> {
 
-    canvas: React.RefObject<HTMLCanvasElement>;
+    canvas: React.RefObject<HTMLCanvasElement>; //the canvas to draw the poster on
 
     constructor(props: any) {
         super(props);
@@ -35,7 +35,8 @@ class Selection extends Component<SelectionProps, SelectionState> {
         this.getTitleInformation();
     }
 
-    //If the movie title changed, retrieve the new movie information.
+    //If the movie title changed, retrieve the new movie information. If the poster changed,
+    //redraw the canvas.
     componentDidUpdate(prevProps: any, prevState: any) {
         if (this.props.title !== prevProps.title) {
             this.getTitleInformation();
@@ -48,6 +49,7 @@ class Selection extends Component<SelectionProps, SelectionState> {
     //Makes a query to the API using this.props.title, stores the parsed result in this.state.movie.
     async getTitleInformation() {
         try {
+            //First, try querying with the title.
             let response = await fetch("http://www.omdbapi.com/?t=" + encodeURI(this.props.title)
                 +"&plot=full&apikey=fa79688c");
             if (!response.ok) {
@@ -67,6 +69,7 @@ class Selection extends Component<SelectionProps, SelectionState> {
                 result = await responseID.json();
             }
 
+            //Update state. When complete, it's safe to load the image for the poster.
             this.setState({
                 movie: result
             }, () => {
@@ -79,6 +82,8 @@ class Selection extends Component<SelectionProps, SelectionState> {
         }
     }
 
+    //If this movie has a poster, load an new HTMLImageElement in this.state.poster and set
+    //its source.
     fetchAndSaveImage() {
         if (this.state.movie.Poster === "N/A") {
             this.setState( {
@@ -95,8 +100,8 @@ class Selection extends Component<SelectionProps, SelectionState> {
         poster.src = this.state.movie.Poster;
     }
 
+    //Clears the current canvas and if the poster exists, draws the poster.
     draw() {
-        console.log("redrew poster");
         let canvas = this.canvas.current;
         if (canvas === null) throw Error("No canvas reference.");
         let ctx = canvas.getContext("2d");

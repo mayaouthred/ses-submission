@@ -9,8 +9,8 @@ interface ResultComponentState {
     results: any; //a formatted list of ten or less buttons with the titles of the result's movies
     numResults: number; //number of total results for the search
     pageNumber: number; //the page number the results came from
-    selectedTitle: string; //the title the user has selected
-    selectedID: string;
+    selectedTitle: string; //the title the movie the user has selected
+    selectedID: string; //the ID of the movie the user has selected
 }
 
 class ResultComponent extends Component<ResultComponentProps, ResultComponentState> {
@@ -63,7 +63,8 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
                 let movieTitles: any[] = result.Search;
                 let parsedResult = movieTitles.map(movie => (
                         <li className="title-button">
-                            <button onClick={this.onTitleButtonClick} key={movie.imdbID} value={movie.imdbID}><b>{movie.Title}</b></button>
+                            <button onClick={this.onTitleButtonClick} key={movie.imdbID}
+                                    value={movie.imdbID}><b>{movie.Title}</b></button>
                         </li>
                     ));
 
@@ -124,7 +125,8 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
                     <div id="pagination">
                     <button className='search-button' onClick={this.onPrevButtonClick}>Previous ten results</button>
                     <button className='search-button' onClick={this.onNextButtonClick}>Next ten results</button>
-                    <p>Currently displaying results {this.state.pageNumber*10-9} through {Math.min(this.state.pageNumber*10, this.state.numResults)} of {this.state.numResults}</p>
+                    <p>Currently displaying results {this.state.pageNumber*10-9} through {Math.min(this.state.pageNumber*10,
+                        this.state.numResults)} of {this.state.numResults}</p>
                     </div>
                 </div>
 
