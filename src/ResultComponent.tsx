@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import Selection from './Selection';
 
 interface ResultComponentProps {
-    title: string,
+    title: string, //the title the user want to search for
 }
 
 interface ResultComponentState {
-    results: any;
-    numResults: number;
-    pageNumber: number;
-    selectedTitle: string;
+    results: any; //a formatted list of ten or less buttons with the titles of the result's movies
+    numResults: number; //number of total results for the search
+    pageNumber: number; //the page number the results came from
+    selectedTitle: string; //the title the user has selected
+    selectedID: string;
 }
 
 class ResultComponent extends Component<ResultComponentProps, ResultComponentState> {
@@ -20,7 +21,8 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
             results: [],
             numResults: 0,
             pageNumber: 1,
-            selectedTitle: "Iron Man"
+            selectedTitle: "Iron Man",
+            selectedID: "tt0371746"
         }
     }
 
@@ -42,10 +44,11 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
 
     }
 
-    //Makes a query to the API using this.props.title and this.state.pageNumber. Sets this.state.results and this.state.numResults
-    //accordingly.
+    //Makes a query to the API using this.props.title and this.state.pageNumber. Sets this.state.results and
+    // this.state.numResults accordingly.
     async getMovieData(page: number) {
         try {
+            //Request a list of movies from the API.
             let response = await fetch("http://www.omdbapi.com/?s=" + encodeURI(this.props.title)
                 +"&page="+ this.state.pageNumber +"&apikey=fa79688c");
             if (!response.ok) {
@@ -53,24 +56,29 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
                 return;
             }
             let result = await response.json();
+
+            //If the response has search results, format into a list of button elements with the imdbID as the key.
+            //Update state accordingly.
             if (result.Response === "True") {
                 let movieTitles: any[] = result.Search;
                 let parsedResult = movieTitles.map(movie => (
                         <li className="title-button">
-                            <button onClick={this.onTitleButtonClick} key={movie.imdbID} value={movie.Title}><b>{movie.Title}</b></button>
+                            <button onClick={this.onTitleButtonClick} key={movie.imdbID} value={movie.imdbID}><b>{movie.Title}</b></button>
                         </li>
                     ));
+
                 this.setState({
                     results: parsedResult,
                     numResults: result.totalResults
                 });
+
             } else {
+                //Otherwise, indicate that the search was unsuccessful.
                 this.setState({
                     results: <li>I'm sorry, I couldn't find anything for that search.</li>,
                     numResults: 0
                 })
             }
-
 
         } catch (e) {
             alert("There was a problem connecting with the server.")
@@ -78,7 +86,7 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
         }
     }
 
-    //Increment the pageNumber by one.
+    //Increment this.state.pageNumber by one.
     onNextButtonClick = () => {
         if (Math.ceil(this.state.numResults / 10) > this.state.pageNumber) {
             let temp: number = this.state.pageNumber + 1;
@@ -89,7 +97,7 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
 
     }
 
-    //Decrement the page number by one.
+    //Decrement the this.state.pageNumber by one.
     onPrevButtonClick = () => {
         if (this.state.pageNumber > 1) {
             let temp: number = this.state.pageNumber - 1;
@@ -102,7 +110,8 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
     //Update which movie title is currently selected.
     onTitleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.setState({
-            selectedTitle: event.currentTarget.value
+            selectedTitle: event.currentTarget.innerText,
+            selectedID: event.currentTarget.value
         })
     }
 
@@ -115,11 +124,11 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
                     <div id="pagination">
                     <button className='search-button' onClick={this.onPrevButtonClick}>Previous ten results</button>
                     <button className='search-button' onClick={this.onNextButtonClick}>Next ten results</button>
-                    <p>Currently displaying results {this.state.pageNumber*10-9} through {this.state.pageNumber*10} of {this.state.numResults}</p>
+                    <p>Currently displaying results {this.state.pageNumber*10-9} through {Math.min(this.state.pageNumber*10, this.state.numResults)} of {this.state.numResults}</p>
                     </div>
                 </div>
 
-                <Selection title={this.state.selectedTitle}/>
+                <Selection title={this.state.selectedTitle} id={this.state.selectedID}/>
 
 
             </div>

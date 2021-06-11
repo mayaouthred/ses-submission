@@ -65,7 +65,7 @@ button:hover {
 #selection {
   flex: 0 1 auto;
   width: 60%;
-  max-width: 700px;
+  max-width: 600px;
   margin: 10px;
 }
 
@@ -90,4 +90,9 @@ button:hover {
   margin-top: 10px;
   padding: 6px;
   min-width: 300px;
+}
+
+@media screen and (max-width:900px) {
+  .inline-display{flex-wrap: wrap;}
+  #titles-list {flex-basis: 100%;}
 }
