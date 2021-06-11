@@ -73,10 +73,10 @@ class Selection extends Component<SelectionProps, SelectionState> {
         return (
             <div id='selection'>
                 <h1>{this.state.movie.Title}</h1>
-                <p>Release date: {this.state.movie.Released}</p>
-                <p>Runtime: {this.state.movie.Runtime}</p>
-                <p>Genre: {this.state.movie.Genre}</p>
-                <p>Director: {this.state.movie.Director}</p>
+                <p><b>Release date: </b>{this.state.movie.Released}</p>
+                <p><b>Runtime: </b>{this.state.movie.Runtime}</p>
+                <p><b>Genre: </b>{this.state.movie.Genre}</p>
+                <p><b>Director: </b>{this.state.movie.Director}</p>
                 <p>{this.state.movie.Plot}</p>
             </div>
         )
