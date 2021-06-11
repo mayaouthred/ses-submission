@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 
 interface SelectionProps {
-    title: string;
+    title: string; //the title of the movie the user want more information about
 }
 
 interface SelectionState {
-    movie: any;
+    movie: any; //an object holding the response from the API
 }
 
+/**
+ * Displays the movie's associated information.
+ */
 class Selection extends Component<SelectionProps, SelectionState> {
 
     constructor(props: any) {
@@ -26,12 +29,14 @@ class Selection extends Component<SelectionProps, SelectionState> {
         this.getTitleInformation();
     }
 
+    //If the movie title changed, retrieve the new movie information.
     componentDidUpdate(prevProps: any, prevState: any) {
         if (this.props.title !== prevProps.title) {
             this.getTitleInformation();
         }
     }
 
+    //Makes a query to the API using this.props.title, stores the parsed result in this.state.movie.
     async getTitleInformation() {
         try {
             let response = await fetch("http://www.omdbapi.com/?t=" + encodeURI(this.props.title)

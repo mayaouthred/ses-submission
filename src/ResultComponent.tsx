@@ -99,6 +99,7 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
         }
     }
 
+    //Update which movie title is currently selected.
     onTitleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.setState({
             selectedTitle: event.currentTarget.value

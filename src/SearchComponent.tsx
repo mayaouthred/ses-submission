@@ -9,7 +9,7 @@ interface SearchComponentState {
 }
 
 /**
- * A searchbar and receives the user's query.
+ * A search bar that receives the user's query.
  */
 class SearchComponent extends Component<SearchComponentProps, SearchComponentState> {
 
@@ -20,13 +20,14 @@ class SearchComponent extends Component<SearchComponentProps, SearchComponentSta
         }
     }
 
-    //Update the state to reflect the new search and update App.tsx with onInputChange.
+    //Update the state to reflect the new search text.
     onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             text: event.target.value
         });
     }
 
+    //Updates App.tsx with the new query.
     onButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.props.onInputChange(this.state.text);
     }
