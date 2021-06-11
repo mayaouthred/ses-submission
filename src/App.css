@@ -36,3 +36,58 @@
     transform: rotate(360deg);
   }
 }
+
+button {
+  background-color: white;
+  border: none;
+  padding: 10px 10px;
+  text-align: left;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: cadetblue;
+}
+
+.titles {
+  column-count: 2;
+  list-style-type: none;
+  max-width: 700px;
+}
+
+.search-button {
+  font-size: 12px;
+  padding: 12px 20px;
+  background-color: cadetblue;
+  margin: 10px 10px 10px 10px;
+}
+
+#selection {
+  flex: 0 1 auto;
+  width: 60%;
+  max-width: 700px;
+  margin: 10px;
+}
+
+#titles-list {
+  flex: 0 1 auto;
+  margin: 10px;
+}
+
+.inline-display {
+  display: flex;
+  justify-content: center;
+}
+
+#pagination {
+  display: flex;
+  font-size: 12px;
+
+}
+
+#search-bar {
+  font-size: 17px;
+  margin-top: 10px;
+  padding: 6px;
+  min-width: 300px;
+}

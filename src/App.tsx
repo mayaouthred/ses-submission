@@ -6,7 +6,6 @@ import ResultComponent from "./ResultComponent";
 
 interface AppState {
   query: string; //search input by the user
-  filter: string; //filter chosen by the user
 }
 
 
@@ -16,15 +15,13 @@ class App extends Component<{}, AppState> {
     super(props);
     this.state = {
       query: "Iron Man",
-      filter: "",
     };
   }
 
   //Update this.state with a new query and filter text.
-  updateQuery = (newQuery: string, newFilter: string) => {
+  updateQuery = (newQuery: string) => {
     this.setState({
       query: newQuery,
-      filter: newFilter,
     });
 
   }
@@ -34,7 +31,7 @@ class App extends Component<{}, AppState> {
         <div>
           <h1>Hello</h1>
           <SearchComponent onInputChange={this.updateQuery}/>
-          <ResultComponent title={this.state.query} filter={this.state.filter}/>
+          <ResultComponent title={this.state.query}/>
         </div>
     )
   }

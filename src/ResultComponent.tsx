@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
+import Selection from './Selection';
 
 interface ResultComponentProps {
     title: string,
-    filter: string
 }
 
 interface ResultComponentState {
-    results: any[];
+    results: any;
     numResults: number;
     pageNumber: number;
+    selectedTitle: string;
 }
 
 class ResultComponent extends Component<ResultComponentProps, ResultComponentState> {
@@ -18,7 +19,8 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
         this.state = {
             results: [],
             numResults: 0,
-            pageNumber: 1
+            pageNumber: 1,
+            selectedTitle: "Iron Man"
         }
     }
 
@@ -28,7 +30,7 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
 
     //If title changed, reset page number and request data. If page number changed, re-request the data.
     componentDidUpdate(prevProps: any, prevState: any) {
-        if (this.props.title !== prevProps.title && this.state.pageNumber !== 1) {
+        if (this.props.title !== prevProps.title) {
             this.setState({
                 pageNumber: 1,
             }, () => {
@@ -51,10 +53,25 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
                 return;
             }
             let result = await response.json();
-            this.setState({
-                results: result.Search,
-                numResults: result.totalResults
-            });
+            if (result.Response === "True") {
+                let movieTitles: any[] = result.Search;
+                let parsedResult = movieTitles.map(movie => (
+                        <li className="title-button">
+                            <button onClick={this.onTitleButtonClick} key={movie.imdbID} value={movie.Title}><b>{movie.Title}</b></button>
+                        </li>
+                    ));
+                this.setState({
+                    results: parsedResult,
+                    numResults: result.totalResults
+                });
+            } else {
+                this.setState({
+                    results: <li>I'm sorry, I couldn't find anything for that search.</li>,
+                    numResults: 0
+                })
+            }
+
+
         } catch (e) {
             alert("There was a problem connecting with the server.")
             console.log(e);
@@ -63,7 +80,7 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
 
     //Increment the pageNumber by one.
     onNextButtonClick = () => {
-        if (this.state.numResults % 10 > this.state.pageNumber) {
+        if (Math.ceil(this.state.numResults / 10) > this.state.pageNumber) {
             let temp: number = this.state.pageNumber + 1;
             this.setState({
                 pageNumber: temp
@@ -82,14 +99,28 @@ class ResultComponent extends Component<ResultComponentProps, ResultComponentSta
         }
     }
 
+    onTitleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        this.setState({
+            selectedTitle: event.currentTarget.value
+        })
+    }
+
     render() {
         return (
-            <div>
-                {this.state.results.map(movie => (
-                    <p key={movie.imdbID}>{movie.Title}</p>
-                ))}
-                <button onClick={this.onPrevButtonClick}>Previous 10 results</button>
-                <button onClick={this.onNextButtonClick}>Next 10 results</button>
+            <div className='inline-display'>
+                <div id="titles-list">
+                    <ul className="titles">{this.state.results}</ul>
+
+                    <div id="pagination">
+                    <button className='search-button' onClick={this.onPrevButtonClick}>Previous ten results</button>
+                    <button className='search-button' onClick={this.onNextButtonClick}>Next ten results</button>
+                    <p>Currently displaying results {this.state.pageNumber*10-9} through {this.state.pageNumber*10} of {this.state.numResults}</p>
+                    </div>
+                </div>
+
+                <Selection title={this.state.selectedTitle}/>
+
+
             </div>
         )
 
